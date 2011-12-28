@@ -6,6 +6,23 @@
     {include file='default/views/helpers/google_analytics.tpl'}
 </head>
 <body>
+    {if isset($messages) && count($messages)}
+        <div id='messageOuter'>
+            {foreach from=$messages item="message"}
+                <div class='message'>
+                    {$message}
+                </div>
+            {/foreach}
+        </div>
+    {/if}
+    <ul id="nav">
+        <li><a href="/">home</a></li>
+        {if $user->isAuthed()}
+            <li><a href="/me">settings</a></li>
+        {else}
+            <li><a href="/login">login</a></li>
+        {/if}
+    </ul>
     {block name="body"}
         <p>Your body content goes here. This block will be automatically
         overridden when you extend this base template and re-declare
@@ -17,7 +34,5 @@
       makes sense to have a separate block to put script tags in
      *}
     {block name="script"}{/block}
-
-    {* default tracking is GA *}
 </body>
 </html>

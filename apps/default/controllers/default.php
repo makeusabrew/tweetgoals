@@ -1,6 +1,6 @@
 <?php
-class DefaultController extends Controller {
+require_once('apps/default/controllers/abstract.php');
+class DefaultController extends AbstractController {
     public function index() {
-        // world changing code goes here
     }
 }

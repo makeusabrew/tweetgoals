@@ -3,7 +3,7 @@ require_once('apps/twitterusers/deps/twitter-async/EpiCurl.php');
 require_once('apps/twitterusers/deps/twitter-async/EpiOAuth.php');
 require_once('apps/twitterusers/deps/twitter-async/EpiTwitter.php');
 
-require_once('apps/bettershared/controllers/abstract.php');
+require_once('apps/default/controllers/abstract.php');
 class UsersController extends AbstractController {
 
     public function init() {
@@ -45,7 +45,7 @@ class UsersController extends AbstractController {
             )));
         } catch (Exception $e) {
             // uh oh
-            Log::debug('could not get oauth URL');
+            Log::debug('could not get oauth URL: '.$e->getMessage());
             return $this->redirect('/', 'Uh oh! Couldn\'t get twitter auth URL');
         }
     }
@@ -70,8 +70,8 @@ class UsersController extends AbstractController {
             $details = $twitterObj->get_accountVerify_credentials();
         } catch (Exception $e) {
             return $this->redirect(array(
-                "app" => "bettershared",
-                "controller" => "Bettershared",
+                "app" => "default",
+                "controller" => "Default",
                 "action" => "index",
             ), "Oops! There was a problem logging into Twitter. Please try again");
         }
@@ -121,87 +121,6 @@ class UsersController extends AbstractController {
         $user->addToSession();
         $this->user = $user;
 
-        //
-        // @todo obviously we shouldn't really be fetching *all* favourites like this on login!
-        //
-        try {
-            $favourites = $twitterObj->get('/favorites/'.$this->user->username.'.json', array('include_entities' => true, 'count' => 200));
-        } catch (EpiTwitterException $e) {
-            // deal with it properly...
-            die($e->getMessage());
-        }
-        foreach ($favourites as $favourite) {
-            //echo $favourite->id_str;
-            $favObj = Table::factory('Favourites')->findByTwitterId($favourite->id_str);
-            if ($favObj === false) {
-                // new favourite, bang it in
-                $favObj = Table::factory('Favourites')->newObject();
-                $data = array(
-                    'created_at' => $favourite->created_at,
-                    'twitter_id' => $favourite->id_str,
-                    'text' => $favourite->text,
-                    'author_username' => $favourite->user->screen_name,
-                    'author_id' => $favourite->user->id,
-                    'source' => $favourite->source,
-                    'reply_username' => $favourite->in_reply_to_screen_name,
-                    'reply_id' => $favourite->in_reply_to_status_id_str,
-                );
-                $favObj->setValues($data);
-                $favObj->save();
-                Log::debug('added favourite with id ['.$favObj->getId().']');
-                if (isset($favourite->entities->urls) && is_array($favourite->entities->urls)) {
-                    foreach ($favourite->entities->urls as $url) {
-                        $data = array(
-                            'favourite_id' => $favObj->getId(),
-                            'url' => $url->url,
-                            'indices' => implode(',', $url->indices),
-                        );
-                        if (isset($url->display_url)) {
-                            $data['display_url'] = $url->display_url;
-                        }
-                        if (isset($url->expanded_url)) {
-                            $data['expanded_url'] = $url->expanded_url;
-                        }
-                        $urlObj = Table::factory('FavouriteUrls')->newObject();
-                        $urlObj->setValues($data);
-                        $urlObj->save();
-                    }
-                }
-
-                if (isset($favourite->entities->user_mentions) && is_array($favourite->entities->user_mentions)) {
-                    foreach ($favourite->entities->user_mentions as $mention) {
-                        $data = array(
-                            'favourite_id' => $favObj->getId(),
-                            'author_id' => $mention->id,
-                            'screen_name' => $mention->screen_name,
-                            'name' => isset($mention->name) ? $mention->name : '',
-                            'indices' => implode(',', $mention->indices),
-                        );
-                        $mentionObj = Table::factory('FavouriteUserMentions')->newObject();
-                        $mentionObj->setValues($data);
-                        $mentionObj->save();
-                    }
-                }
-
-                if (isset($favourite->entities->hashtags) && is_array($favourite->entities->hashtags)) {
-                    foreach ($favourite->entities->hashtags as $hashtag) {
-                        $data = array(
-                            'favourite_id' => $favObj->getId(),
-                            'text' => $hashtag->text,
-                            'indices' => implode(',', $hashtag->indices),
-                        );
-                        $hashtagObj = Table::factory('FavouriteHashtags')->newObject();
-                        $hashtagObj->setValues($data);
-                        $hashtagObj->save();
-                    }
-                }
-            }
-
-            // ok, lovely. is this favourite in the user's list already?
-            if ($this->user->hasFavouriteId($favObj->getId()) === false) {
-                $this->user->addFavouriteId($favObj->getId());
-            }
-        }
 
         $message = "Hi, <strong>".$user->username."</strong>!";
 
@@ -209,8 +128,8 @@ class UsersController extends AbstractController {
             return $this->redirect($this->request->getVar('target'), $message);
         } else {
             return $this->redirect(array(
-                "app" => "bettershared",
-                "controller" => "Bettershared",
+                "app" => "default",
+                "controller" => "Default",
                 "action" => "index",
             ), $message);
         }
