@@ -25,4 +25,10 @@ class Resolutions extends Table {
             ),
         ),
     );
+
+    public function findForUser($user_id) {
+        return $this->findAll(array(
+            'user_id' => $user_id,
+        ));
+    }
 }
