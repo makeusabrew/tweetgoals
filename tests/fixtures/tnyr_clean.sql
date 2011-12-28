@@ -58,6 +58,7 @@ CREATE TABLE `resolutions` (
   `user_id` int(10) unsigned NOT NULL,
   `due_date` date NOT NULL,
   `done` tinyint(1) NOT NULL,
+  `sort_order` int(10) unsigned NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -111,4 +112,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2011-12-28 20:22:05
+-- Dump completed on 2011-12-28 20:41:26

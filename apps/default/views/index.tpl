@@ -2,7 +2,6 @@
 {block name="body"}
     <h1>TNYR</h1>
 {if $user->isAuthed()}
-    <a href="/new">Add resolution</a>
-    My list here
+    <a href="/resolutions/new">Add resolution</a>
 {/if}
 {/block}

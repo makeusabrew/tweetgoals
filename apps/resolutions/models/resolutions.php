@@ -5,6 +5,7 @@ class Resolution extends Object {
 }
 
 class Resolutions extends Table {
+    protected $order_by = 'sort_order ASC';
     protected $meta = array(
         'columns' => array(
             'content' => array(
@@ -23,6 +24,10 @@ class Resolutions extends Table {
             'done' => array(
                 'type' => 'bool',
             ),
+            'sort_order' => array(
+                'type' => 'number',
+                'validation' => 'unsigned',
+            ),
         ),
     );
 
@@ -30,5 +35,10 @@ class Resolutions extends Table {
         return $this->findAll(array(
             'user_id' => $user_id,
         ));
+    }
+
+    public function getNextSortOrder() {
+        $highest = $this->find(null, null, "sort_order DESC");
+        return $highest ? $highest->sort_order + 1 : 0;
     }
 }
