@@ -12,7 +12,7 @@
     {/if}
 
     <form action='{$current_url}/update' method='post'>
-        <input name='comment_id' type='hidden' value='{$comment->getId()}' />
+        <input name='update_id' type='hidden' value='{$update->getId()}' />
         <input name='value' type='text' value='1' />
         <input name='comment' type='text' />
         <input type='submit' value='Update Entry' />

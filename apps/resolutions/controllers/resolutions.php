@@ -36,26 +36,26 @@ class ResolutionsController extends AbstractController {
             $idx => 1,
         );
 
-        $comment = Table::factory('ResolutionComments')->newObject();
-        $comment->setValues($data);
-        $comment->save();
-        $this->assign('comment', $comment);
+        $update = Table::factory('ResolutionUpdates')->newObject();
+        $update->setValues($data);
+        $update->save();
+        $this->assign('update', $update);
         $this->assign('type', $this->getMatch('type'));
     }
 
     public function update_comment() {
         $idx = $this->getMatch('type');
-        $comment = Table::factory('ResolutionComments')->findByIdForUser(
-            $this->request->getVar('comment_id'),
+        $update = Table::factory('ResolutionUpdates')->findByIdForUser(
+            $this->request->getVar('update_id'),
             $this->user->getId()
         );
 
-        if (!$comment) {
+        if (!$update) {
             // bad luck
-            die("no comment");
+            die("no update");
         }
 
-        if (Utils::olderThan(300, $comment->created)) {
+        if (Utils::olderThan(300, $update->created)) {
             die("too old");
         }
 
@@ -64,12 +64,12 @@ class ResolutionsController extends AbstractController {
             'content' => $this->request->getVar('comment')
         );
 
-        if ($comment->updateValues($data, true)) {
-            $comment->save();
+        if ($update->updateValues($data, true)) {
+            $update->save();
             return $this->redirect("/");
         }
         $this->setErrors(
-            $comment->getErrors()
+            $update->getErrors()
         );
     }
 
@@ -79,6 +79,6 @@ class ResolutionsController extends AbstractController {
             die("no resolution");
         }
         $this->assign('resolution', $resolution);
-        $this->assign('updates', $resolution->getComments());
+        $this->assign('updates', $resolution->getUpdates());
     }
 }

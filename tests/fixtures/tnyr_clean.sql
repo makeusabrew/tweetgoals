@@ -16,13 +16,13 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `resolution_comments`
+-- Table structure for table `resolution_updates`
 --
 
-DROP TABLE IF EXISTS `resolution_comments`;
+DROP TABLE IF EXISTS `resolution_updates`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `resolution_comments` (
+CREATE TABLE `resolution_updates` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `created` datetime NOT NULL,
   `updated` datetime NOT NULL,
@@ -35,12 +35,12 @@ CREATE TABLE `resolution_comments` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `resolution_comments`
+-- Dumping data for table `resolution_updates`
 --
 
-LOCK TABLES `resolution_comments` WRITE;
-/*!40000 ALTER TABLE `resolution_comments` DISABLE KEYS */;
-/*!40000 ALTER TABLE `resolution_comments` ENABLE KEYS */;
+LOCK TABLES `resolution_updates` WRITE;
+/*!40000 ALTER TABLE `resolution_updates` DISABLE KEYS */;
+/*!40000 ALTER TABLE `resolution_updates` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -112,4 +112,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2011-12-28 20:41:26
+-- Dump completed on 2011-12-29 12:31:57

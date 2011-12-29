@@ -1,7 +1,7 @@
 
 <?php
 
-class ResolutionComment extends Object {
+class ResolutionUpdate extends Object {
     // any object specific code here relating to a single item
     public function getValueString() {
         if ($this->good > 0) {
@@ -11,7 +11,7 @@ class ResolutionComment extends Object {
     }
 }
 
-class ResolutionComments extends Table {
+class ResolutionUpdates extends Table {
     protected $order_by = 'created ASC';
     protected $meta = array(
         'columns' => array(
@@ -33,15 +33,15 @@ class ResolutionComments extends Table {
     );
 
     public function findByIdForUser($id, $user_id) {
-        $sql = "SELECT  rc.* FROM `resolution_comments` rc
-            INNER JOIN (`resolutions` r) ON (rc.parent_id=r.id)
-            WHERE rc.id = ? AND r.user_id = ?";
+        $sql = "SELECT  ru.* FROM `resolution_updates` ru
+            INNER JOIN (`resolutions` r) ON (ru.parent_id=r.id)
+            WHERE ru.id = ? AND r.user_id = ?";
 
         $params = array($id, $user_id);
 
         $dbh = Db::getInstance();
         $sth = $dbh->prepare($sql);
-        $sth->setFetchMode(PDO::FETCH_CLASS, "ResolutionComment");
+        $sth->setFetchMode(PDO::FETCH_CLASS, "ResolutionUpdate");
         $sth->execute($params);
         return $sth->fetch();
     }

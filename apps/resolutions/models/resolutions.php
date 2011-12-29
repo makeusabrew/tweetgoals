@@ -1,19 +1,19 @@
 <?php
 
 class Resolution extends Object {
-    protected $comments = null;
+    protected $updates = null;
 
-    public function getComments() {
-        if ($this->comments === null) {
-            $this->comments = Table::factory('ResolutionComments')->findAll(array(
+    public function getUpdates() {
+        if ($this->updates === null) {
+            $this->updates = Table::factory('ResolutionUpdates')->findAll(array(
                 'parent_id' => $this->getId(),
             ));
         }
-        return $this->comments;
+        return $this->updates;
     }
 
     public function getGoodString() {
-        $comments = $this->getComments();
+        $comments = $this->getUpdates();
         $value = 0;
         foreach ($comments as $comment) {
             if ($comment->good > 0) {
@@ -24,7 +24,7 @@ class Resolution extends Object {
     }
 
     public function getBadString() {
-        $comments = $this->getComments();
+        $comments = $this->getUpdates();
         $value = 0;
         foreach ($comments as $comment) {
             if ($comment->bad > 0) {
