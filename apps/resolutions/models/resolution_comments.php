@@ -24,4 +24,18 @@ class ResolutionComments extends Table {
             ),
         ),
     );
+
+    public function findByIdForUser($id, $user_id) {
+        $sql = "SELECT * FROM `resolution_comments` rc
+            INNER JOIN (`resolutions` r) ON (rc.parent_id=r.id)
+            WHERE rc.id = ? AND r.user_id = ?";
+
+        $params = array($id, $user_id);
+
+        $dbh = Db::getInstance();
+        $sth = $dbh->prepare($sql);
+        $sth->setFetchMode(PDO::FETCH_CLASS, "ResolutionComment");
+        $sth->execute($params);
+        return $sth->fetch();
+    }
 }

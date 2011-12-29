@@ -1,7 +1,38 @@
 <?php
 
 class Resolution extends Object {
-    // any object specific code here relating to a single item
+    protected $comments = null;
+
+    public function getComments() {
+        if ($this->comments === null) {
+            $this->comments = Table::factory('ResolutionComments')->findAll(array(
+                'parent_id' => $this->getId(),
+            ));
+        }
+        return $this->comments;
+    }
+
+    public function getGoodString() {
+        $comments = $this->getComments();
+        $value = 0;
+        foreach ($comments as $comment) {
+            if ($comment->good > 0) {
+                $value += $comment->good;
+            }
+        }
+        return $value ? "+".$value : "0";
+    }
+
+    public function getBadString() {
+        $comments = $this->getComments();
+        $value = 0;
+        foreach ($comments as $comment) {
+            if ($comment->bad > 0) {
+                $value += $comment->bad;
+            }
+        }
+        return $value ? "-".$value : "0";
+    }
 }
 
 class Resolutions extends Table {
@@ -31,7 +62,7 @@ class Resolutions extends Table {
         ),
     );
 
-    public function findForUser($user_id) {
+    public function findAllForUser($user_id) {
         return $this->findAll(array(
             'user_id' => $user_id,
         ));
