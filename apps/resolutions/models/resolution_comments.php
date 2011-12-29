@@ -26,7 +26,7 @@ class ResolutionComments extends Table {
     );
 
     public function findByIdForUser($id, $user_id) {
-        $sql = "SELECT * FROM `resolution_comments` rc
+        $sql = "SELECT  rc.* FROM `resolution_comments` rc
             INNER JOIN (`resolutions` r) ON (rc.parent_id=r.id)
             WHERE rc.id = ? AND r.user_id = ?";
 
