@@ -3,9 +3,16 @@
 
 class ResolutionComment extends Object {
     // any object specific code here relating to a single item
+    public function getValueString() {
+        if ($this->good > 0) {
+            return "+".$this->good;
+        }
+        return "-".$this->bad;
+    }
 }
 
 class ResolutionComments extends Table {
+    protected $order_by = 'created ASC';
     protected $meta = array(
         'columns' => array(
             'content' => array(

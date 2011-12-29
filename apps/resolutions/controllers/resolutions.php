@@ -72,4 +72,13 @@ class ResolutionsController extends AbstractController {
             $comment->getErrors()
         );
     }
+
+    public function view_resolution() {
+        $resolution = Table::factory('Resolutions')->read($this->getMatch('resolution_id'));
+        if (!$resolution) {
+            die("no resolution");
+        }
+        $this->assign('resolution', $resolution);
+        $this->assign('updates', $resolution->getComments());
+    }
 }
